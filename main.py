@@ -16,12 +16,21 @@ class UserSegmentPusher:
             'email': 'User' + str(id) + '@example.com'
         }
         return user_info
+    
     def store_user_info(self, user_info):
         conn = sqlite3.connect(self.db_path)
         c = conn.cursor()
         c.execute("INSERT INTO users VALUES (?, ?, ?)", (user_info['id'], user_info['username'], user_info['email']))
         conn.commit()
         conn.close()
+        
+    def get_all_users(self):
+        conn = sqlite3.connect(self.db_path)
+        c = conn.cursor()
+        c.execute("SELECT * FROM users")
+        users = c.fetchall()
+        conn.close()
+        return users
     
 
 if __name__ == "__main__":
@@ -31,5 +40,7 @@ if __name__ == "__main__":
     
     pusher.store_user_info(user_info)
     
-    print(user_info)
+    all_users = pusher.get_all_users()
+    
+    print(all_users)
 
